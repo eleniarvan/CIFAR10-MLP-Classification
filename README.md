@@ -1,51 +1,68 @@
 # Image Classification on CIFAR-10 using a Multi-Layer Perceptron (MLP)
 
-This project investigates the performance of a fully connected neural network (Multi-Layer Perceptron - MLP) on the CIFAR-10 image classification dataset. The goal is to design, train, and optimize an MLP architecture and evaluate its performance compared to traditional machine learning algorithms.
+Design, training, and evaluation of a fully connected neural network on the 
+CIFAR-10 image classification dataset, with hyperparameter tuning and 
+comparison against classical baseline classifiers.
 
 ## Project Overview
 
-The CIFAR-10 dataset consists of 60,000 color images (32×32 pixels) distributed across 10 classes. In this project, a custom MLP model was developed to classify these images.
+The CIFAR-10 dataset consists of 60,000 color images (32×32 pixels) across 
+10 classes. A custom MLP was built from scratch to classify these images, 
+with a focus on regularization and generalization.
 
-To improve generalization and reduce overfitting, several architectural and training strategies were explored, including:
-* **Architecture:** Fully connected neural network with ReLU activation functions
-* **Optimization:** Adam optimizer with Cross-Entropy loss
-* **Regularization:** Dropout layers and weight decay
-* **Data Augmentation:** Techniques applied to expand the training dataset and improve model robustness
+## Architecture
+```
+Input (3072) → Linear(3072→512) → ReLU → Dropout(0.5)
+             → Linear(512→256)  → ReLU → Dropout(0.5)
+             → Linear(256→10)
+```
 
-## Results & Evaluation
+- **Loss:** Cross-Entropy
+- **Optimizer:** Adam (lr=1e-4, weight_decay=1e-4)
+- **Epochs:** 40 | **Batch size:** 32
 
-Extensive experimentation was performed by tuning several hyperparameters such as learning rate, batch size, number of hidden units, and number of training epochs.
+## Data Augmentation
 
-**Final Performance**
-* **Test Accuracy:** ~56–57%
+To improve generalization, the following augmentations were applied to 
+the training set:
+- RandomHorizontalFlip
+- RandomCrop(32, padding=4)
 
-The optimized MLP model significantly outperformed simpler baseline classifiers such as:
-* k-Nearest Neighbors (kNN)
-* Nearest Class Centroid
+## Results
+
+| Model                  | Test Accuracy |
+|------------------------|---------------|
+| MLP (this project)     | ~56–57%       |
+| k-Nearest Neighbors    |  38.5%        |
+| Nearest Class Centroid |  27.7%        |
+
+The MLP significantly outperformed both classical baselines.
 
 ## Error Analysis
 
-As expected for fully connected networks, which do not explicitly preserve spatial structure like Convolutional Neural Networks (CNNs), most misclassifications occurred between visually similar classes. Examples include:
-* Ships vs. Trucks
-* Cats vs. Dogs
+Most misclassifications occurred between visually similar classes 
+(e.g. cats vs dogs, ships vs trucks) — expected behavior for a fully 
+connected network that does not explicitly model spatial structure 
+unlike CNNs. Training vs test accuracy curves confirmed a small 
+generalization gap, indicating that Dropout and Weight Decay 
+successfully controlled overfitting.
 
-Analysis of the training and testing curves showed a small generalization gap, suggesting that the regularization techniques successfully mitigated overfitting.
+## Technologies
 
-## Technologies Used
+- Python, PyTorch, NumPy, Matplotlib, Scikit-learn
+- Jupyter Notebook
+- Dataset: [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html)
 
-* **Language:** Python
-* **Environment:** Jupyter Notebook
-* **Core Libraries:** PyTorch, NumPy, Matplotlib, Scikit-learn
-* **Key Concepts:** Deep Learning, Feedforward Neural Networks, Backpropagation, Hyperparameter Tuning, Image Classification
+## How to Run
+```bash
+git clone https://github.com/eleniarvan/CIFAR10-MLP-Classification.git
+cd CIFAR10-MLP-Classification
+jupyter notebook MLP.ipynb
+```
 
-## How to View the Project
+Dependencies: `torch`, `torchvision`, `numpy`, `matplotlib`, `scikit-learn`
 
-Open the `.ipynb` notebook directly on GitHub or download it and run it locally to explore:
-* The model implementation
-* The training pipeline
-* Hyperparameter experiments
-* Visualization of training and testing performance
+## Context
 
-## Notes
-
-This project focuses on understanding how fully connected neural networks perform on image classification tasks and highlights the limitations of MLP architectures when compared to convolutional approaches.
+Developed as part of the Neural Networks course at the Aristotle University 
+of Thessaloniki (AUTH), November 2025.
